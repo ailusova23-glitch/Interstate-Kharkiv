@@ -13,7 +13,7 @@
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #1e293b;
-            --primary: #059669; /* Сучасний смарагдовий */
+            --primary: #059669;
             --primary-dark: #047857;
             --accent: #d97706;
             --border: #e2e8f0;
@@ -28,7 +28,7 @@
         }
 
         header {
-            background-color: #0f172a; /* Глибокий графіт */
+            background-color: #0f172a;
             color: white;
             padding: 1rem;
             display: flex;
@@ -115,20 +115,68 @@
         .btn:hover { background-color: var(--primary-dark); }
         .btn:disabled { background-color: #cbd5e1; cursor: not-allowed; }
 
-        /* Карта */
-        .map-container {
-            width: 100%;
-            height: 450px;
+        /* Заміна карти на надійну інтерактивну схему */
+        .interactive-map-box {
+            background: #1e293b;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .map-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .map-point-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .map-point-btn:hover { background: var(--primary); }
+        .map-info-panel {
+            background: #0f172a;
+            padding: 15px;
             border-radius: 8px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            margin-bottom: 15px;
+            margin-top: 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            border-left: 4px solid var(--accent);
         }
 
-        /* Статті та підручник */
+        /* Вибір теми */
+        .topic-selector {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+        }
+        .topic-tab-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .topic-tab-btn.active-topic {
+            background: var(--primary);
+            color: white;
+        }
+        .topic-pane { display: none; }
+        .topic-pane.active-pane { display: block; }
+
         .article-img {
             width: 100%;
-            max-height: 300px;
+            max-height: 280px;
             object-fit: cover;
             border-radius: 8px;
             margin: 15px 0;
@@ -142,7 +190,6 @@
             font-size: 0.9rem;
             border-left: 4px solid var(--primary);
         }
-
         .sources-box a { color: var(--primary-dark); text-decoration: underline; }
 
         /* Сертифікат заблокований / розблокований */
@@ -176,7 +223,7 @@
 
     <nav>
         <button class="nav-btn active" onclick="switchTab('map', this)">🗺️ Інтерактивна карта</button>
-        <button class="nav-btn" onclick="switchTab('topics', this)">📖 Історичний лонгрід</button>
+        <button class="nav-btn" onclick="switchTab('topics', this)">📖 Історичний лонгрід (5 тем)</button>
         <button class="nav-btn" onclick="switchTab('tests', this)">📝 Тести & XP</button>
         <button class="nav-btn" onclick="switchTab('profile', this)">🏆 Профіль & Сертифікат</button>
     </nav>
@@ -188,47 +235,114 @@
             <div>🏅 Рівень: <span id="userLevel">Дослідник-початківець</span></div>
         </div>
 
-        <!-- ВКЛАДКА 1: GOOGLE MAPS З МІТКАМИ -->
+        <!-- ВКЛАДКА 1: НАДІЙНА ІНТЕРАКТИВНА СХЕМА-КАРТА ХАРКОВА -->
         <div id="map" class="tab-content active">
             <div class="card">
-                <h2 id="m-title">Карта революційного Харкова</h2>
-                <p id="m-desc">Досліджуйте ключові локації міста 1917–1919 років. На карті позначені історичні місця змін влади, вокзал та робітничі райони.</p>
+                <h2 id="m-title">Карта революційного Харкова (1917–1919)</h2>
+                <p id="m-desc">Оберіть ключову історичну локацію на схемі міста, щоб дізнатися її роль у подіях епохи:</p>
                 
-                <!-- Інтеграція Google Maps iframe з центром у Харкові -->
-                <div class="map-container">
-                    <iframe width="100%" height="100%" style="border:0;" loading="lazy" allowfullscreen
-                        src="https://www.maps.google.com/maps?q=Kharkiv&t=&z=13&ie=UTF8&iwloc=&output=embed">
-                    </iframe>
+                <div class="interactive-map-box">
+                    <h3>📍 Стратегічні точки Харкова</h3>
+                    <div class="map-points">
+                        <button class="map-point-btn" onclick="showMapInfo('station')">🚂 Харківський вокзал</button>
+                        <button class="map-point-btn" onclick="showMapInfo('hill')">🏛️ Університетська гірка</button>
+                        <button class="map-point-btn" onclick="showMapInfo('plant')">⚙️ Район ХПЗ</button>
+                        <button class="map-point-btn" onclick="showMapInfo('center')">⚖️ Мобільні центри влади</button>
+                    </div>
+                    <div id="mapInfoPanel" class="map-info-panel">
+                        👆 Клацніть на будь-яку кнопку вище, щоб відкрити історичну довідку про локацію.
+                    </div>
                 </div>
-                <button class="btn" onclick="addXP(15, 'Вивчено локації на карті!')">Відзначити огляд карти (+15 XP)</button>
+                <button class="btn" onclick="addXP(15, 'Вивчено карту локацій!')">Зафіксувати огляд карти (+15 XP)</button>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 2: ІСТОРИЧНИЙ ЛОНГРІД (СТАТТІ У ВИГЛЯДІ ПІДРУЧНИКА) -->
+        <!-- ВКЛАДКА 2: 5 ТЕМ-ЛОНГРИДІВ -->
         <div id="topics" class="tab-content">
             <div class="card">
-                <h2>Тема 1: Політичне протистояння та шість змін влади</h2>
-                <p>Доба Української революції перетворила Харків на один із найгарячіших політичних вузлів Східної Європи. Протягом короткого періоду (1917–1919 рр.) місто пережило щонайменше шість кардинальних змін політичних режимів. Кожна нова влада приносила власні порядки, мобілізації та гасла.</p>
-                
-                <img src="https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=800&q=80" alt="Історичне місто" class="article-img">
+                <h2>Історичні теми та матеріали</h2>
+                <div class="topic-selector">
+                    <button class="topic-tab-btn active-topic" onclick="switchTopic(1, this)">Тема 1</button>
+                    <button class="topic-tab-btn" onclick="switchTopic(2, this)">Тема 2</button>
+                    <button class="topic-tab-btn" onclick="switchTopic(3, this)">Тема 3</button>
+                    <button class="topic-tab-btn" onclick="switchTopic(4, this)">Тема 4</button>
+                    <button class="topic-tab-btn" onclick="switchTopic(5, this)">Тема 5</button>
+                </div>
 
-                <p>Особливо драматичним став період «міжвладдя» наприкінці 1918 — на початку 1919 року, коли в місті паралельно існували німецька комендатура, залишки гетьманської адміністрації, загони Директорії та підпільний більшовицький ревком. Пересічні мешканці змушені були виробляти складні стратегії виживання, адаптуючись до постійних хвиль терору і зміни вивісок на державних установах.</p>
+                <!-- ТЕМА 1 -->
+                <div id="topic1" class="topic-pane active-pane">
+                    <h3>Тема 1: Політичне протистояння та шість змін влади</h3>
+                    <p>Доба Української революції перетворила Харків на один із найгарячіших політичних вузлів. Протягом короткого періоду (1917–1919 рр.) місто пережило щонайменше шість кардинальних змін політичних режимів. Кожна нова влада приносила власні порядки та мобілізації.</p>
+                    <img src="https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=800&q=80" alt="Історія" class="article-img">
+                    <p>Особливо драматичним став період «міжвладдя», коли в місті паралельно існували кілька владних центрів, а населення шукало шляхи виживання.</p>
+                    <div class="sources-box">
+                        <strong>Джерела та література:</strong><br>
+                        • Державний архів Харківської області (Ф. Р-202).<br>
+                        • Газета <i>«Известия Юга»</i> (1917–1918 рр.).<br>
+                        • Верстюк В. Ф. <i>Українська Центральна Рада.</i>
+                    </div>
+                </div>
 
-                <div class="sources-box">
-                    <strong>Додаткові джерела та архівні матеріали:</strong><br>
-                    • Державний архів Харківської області (Фонд Р-202: Харківський губернський ревком).<br>
-                    • Періодичне видання епохи: газета <i>«Известия Юга»</i> (1917–1918 рр.).<br>
-                    • Дослідження з історії регіону: <i>Верстюк В. Ф. Українська Центральна Рада.</i>
+                <!-- ТЕМА 2 -->
+                <div id="topic2" class="topic-pane">
+                    <h3>Тема 2: Харків напередодні та на початку революції (1917)</h3>
+                    <p>Лютнева революція 1917 року активізувала національний рух на Слобожанщині. Вже навесні в Харкові відбулися перші маніфестації під жовто-блакитними прапорами, а міська громадськість почала створювати представницькі органи українців.</p>
+                    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=800&q=80" alt="Архіви" class="article-img">
+                    <p>Попри це, міська дума та промислові кола залишалися певною мірою відірваними від загальноукраїнського контексту, що створювало підґрунтя для майбутніх криз.</p>
+                    <div class="sources-box">
+                        <strong>Джерела та література:</strong><br>
+                        • Багалій Д. І. <i>Історія Слобідської України.</i><br>
+                        • Матеріали фондів Харківської міської Ради (ДАХО, ф. Р-408).
+                    </div>
+                </div>
+
+                <!-- ТЕМА 3 -->
+                <div id="topic3" class="topic-pane">
+                    <h3>Тема 3: Період Гетьманату та німецька присутність (1918)</h3>
+                    <p>Прихід до влади гетьмана Павла Скоропадського у квітні 1918 року встановив у регіоні новий порядок. Однак реальна влада в Харкові значною мірою спиралася на німецькі військові підрозділи, які перебували в місті згідно з умовами Брест-Литовського миру.</p>
+                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" alt="Будівлі" class="article-img">
+                    <p>Місцеві еліти та робітники сприймали цей режим неоднозначно, що виливалося в приховане та відкрите опозиційне протистояння.</p>
+                    <div class="sources-box">
+                        <strong>Джерела та література:</strong><br>
+                        • Центральний державний архів вищих органів влади та управління України (Ф. 1064).<br>
+                        • Дорошенко Д. <i>Історія України, 1917–1923.</i>
+                    </div>
+                </div>
+
+                <!-- ТЕМА 4 -->
+                <div id="topic4" class="topic-pane">
+                    <h3>Тема 4: Період «Міжвладдя» (кін. 1918 – січ. 1919)</h3>
+                    <p>Після поразки Німеччини у Першій світовій війні та падіння гетьманату Харків поринув у кризу «міжвладдя». Війська Директорії намагалися взяти контроль над містом, але зіткнулися з підпільною та збройною активністю більшовицьких сил.</p>
+                    <img src="https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=800&q=80" alt="Документи" class="article-img">
+                    <p>Січневе збройне повстання 1919 року завершилося переходом Харкова під контроль радянських військ та проголошенням столиці Радянської України.</p>
+                    <div class="sources-box">
+                        <strong>Джерела та література:</strong><br>
+                        • Антонов-Овсієнко В. <i>Записки о гражданской войне.</i><br>
+                        • Ісаков П. М. <i>Антибільшовицький повстанський рух на Харківщині.</i>
+                    </div>
+                </div>
+
+                <!-- ТЕМА 5 -->
+                <div id="topic5" class="topic-pane">
+                    <h3>Тема 5: Повсякденні стратегії мешканців та історична пам'ять</h3>
+                    <p>В умовах перманентного хаосу головною турботою пересічних харків'ян було фізичне виживання — пошук їжі, палива та забезпечення безпеки родин. Політичні гасла відходили на другий план.</p>
+                    <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80" alt="Пам'ять" class="article-img">
+                    <p>Соціологічні опитування та матеріали усної історії показують, що містяни масово обирали стратегії невтручання та адаптації, а родинна пам'ять зберегла цей досвід у вигляді фрагментарних переказів.</p>
+                    <div class="sources-box">
+                        <strong>Джерела та література:</strong><br>
+                        • Результати авторського опитування мешканців Харкова (додатки дослідження).<br>
+                        • Радченко О. В. <i>Аграрна політика більшовиків на Харківщині.</i>
+                    </div>
                 </div>
                 <br>
-                <button class="btn" onclick="addXP(25, 'Прочитано статтю повністю!')">Опрацьовано статтю (+25 XP)</button>
+                <button class="btn" onclick="addXP(20, 'Опрацьовано матеріали тем!')">Позначити тему як прочитану (+20 XP)</button>
             </div>
         </div>
 
-        <!-- ВКЛАДКА 3: РОЗШИРЕНІ ТЕСТИ -->
+        <!-- ВКЛАДКА 3: ПОВНОЦІННІ ТЕСТИ (ПО 3 ЗАПИТАННЯ) -->
         <div id="tests" class="tab-content">
             <div class="card">
-                <h2>Перевірка знань: Тестування</h2>
+                <h2>Підсумкове тестування (3 запитання)</h2>
                 
                 <div id="quizBlock">
                     <p><b>Запитання 1 з 3:</b> Скільки разів у Харкові змінювалася влада протягом 1917–1919 років?</p>
@@ -236,9 +350,13 @@
                     <label><input type="radio" name="q1" value="b"> 4 рази</label><br>
                     <label><input type="radio" name="q1" value="c" id="correct1"> Щонайменше 6 разів</label><br><br>
 
-                    <p><b>Запитання 2 з 3:</b> Який період вважається найскладнішим через паралельне співіснування кількох влад?</p>
+                    <p><b>Запитання 2 з 3:</b> Який період характеризувався паралельним співіснуванням кількох центрів влади?</p>
                     <label><input type="radio" name="q2" value="a" id="correct2"> Період «міжвладдя» (кін. 1918 – січ. 1919)</label><br>
                     <label><input type="radio" name="q2" value="b"> Літо 1917 року</label><br><br>
+
+                    <p><b>Запитання 3 з 3:</b> Що, за результатами дослідження повсякденного життя, було головною стратегією більшості мешканців?</p>
+                    <label><input type="radio" name="q3" value="a"> Активна участь у штурмах адміністрацій</label><br>
+                    <label><input type="radio" name="q3" value="b" id="correct3"> Фізичне виживання та невтручання в політику</label><br><br>
 
                     <button class="btn" onclick="submitQuiz()">Надіслати відповіді</button>
                 </div>
@@ -246,7 +364,7 @@
             </div>
         </div>
 
-        <!-- ВКЛАДКА 4: ПРОФІЛЬ ТА СЕРТИФІКАТ -->
+        <!-- ВКЛАДКА 4: ПРОФІЛЬ ТА ЗАБЛОКОВАНИЙ СЕРТИФІКАТ -->
         <div id="profile" class="tab-content">
             <div class="card">
                 <h2>Обліковий запис</h2>
@@ -258,7 +376,7 @@
 
             <div class="card cert-card" id="certCard">
                 <h3 id="certHeader">🔒 Іменний сертифікат заблоковано</h3>
-                <p id="certDesc">Пройдіть усі статті та успішно складіть тести у відповідній вкладці, щоб розблокувати іменний сертифікат.</p>
+                <p id="certDesc">Успішно складіть усі 3 запитання тесту у вкладці «Тести», щоб розблокувати та завантажити свій іменний сертифікат.</p>
                 <br>
                 <button class="btn" id="certBtn" disabled onclick="downloadCertificate()">Завантажити сертифікат (PDF)</button>
             </div>
@@ -277,6 +395,26 @@
             btn.classList.add('active');
         }
 
+        function switchTopic(topicNum, btn) {
+            document.querySelectorAll('.topic-pane').forEach(el => el.classList.remove('active-pane'));
+            document.querySelectorAll('.topic-tab-btn').forEach(el => el.classList.remove('active-topic'));
+            document.getElementById('topic' + topicNum).classList.add('active-pane');
+            btn.classList.add('active-topic');
+        }
+
+        function showMapInfo(point) {
+            const panel = document.getElementById('mapInfoPanel');
+            if (point === 'station') {
+                panel.innerHTML = "<b>🚂 Харківський вокзал:</b> Ключовий транспортний та стратегічний вузол, через який прибували військові ешелони, здійснювався контроль над містом та проходила евакуація різних режимів.";
+            } else if (point === 'hill') {
+                panel.innerHTML = "<b>🏛️ Університетська гірка:</b> Історичний центр міста, де відбувалися перші маніфестації 1917 року під українськими прапорами та засідали міські органи влади.";
+            } else if (point === 'plant') {
+                panel.innerHTML = "<b>⚙️ Район ХПЗ (Паровозобудівний завод):</b> Центр зосередження промислового робітничого класу, який був головною опорною базою більшовицьких організацій у місті.";
+            } else if (point === 'center') {
+                panel.innerHTML = "<b>⚖️ Центр адміністративних змін:</b> Будівлі колишніх губернських установ, де протягом 1917–1919 років постійно змінювалися вивіски, уряди та революційні комітети.";
+            }
+        }
+
         function addXP(amount, msg) {
             xp += amount;
             document.getElementById('userXP').innerText = xp;
@@ -287,10 +425,11 @@
         function submitQuiz() {
             const q1Correct = document.getElementById('correct1').checked;
             const q2Correct = document.getElementById('correct2').checked;
+            const q3Correct = document.getElementById('correct3').checked;
             const res = document.getElementById('quizResult');
 
-            if (q1Correct && q2Correct) {
-                res.innerText = "✅ Вітаємо! Усі відповіді правильні. +50 XP";
+            if (q1Correct && q2Correct && q3Correct) {
+                res.innerText = "✅ Вітаємо! Усі 3 відповіді правильні. +50 XP";
                 res.style.color = "green";
                 if (!quizCompleted) {
                     addXP(50, "Тести складено успішно!");
@@ -298,7 +437,7 @@
                     unlockCert();
                 }
             } else {
-                res.innerText = "❌ Деякі відповіді хибні. Перечитайте статті та спробуйте ще раз!";
+                res.innerText = "❌ Деякі відповіді хибні. Перечитайте матеріади тем та спробуйте ще раз!";
                 res.style.color = "red";
             }
         }
@@ -334,7 +473,6 @@
             `;
         }
 
-        // Базова локалізація (4 мови)
         function changeLanguage() {
             const lang = document.getElementById('langSelect').value;
             if (lang === 'en') {
