@@ -1,0 +1,16 @@
+{
+  "name": "Харків 1917–1919: Перехрестя",
+  "short_name": "Харків 1917–1919",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1c1917",
+  "theme_color": "#881337",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%23881337'/><path d='M256 90 L390 170 L390 340 L256 420 L122 340 L122 170 Z' fill='none' stroke='%23fbbf24' stroke-width='24'/><text x='256' y='295' font-family='Arial, sans-serif' font-size='200' font-weight='bold' fill='%23fbbf24' text-anchor='middle'>Х</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
