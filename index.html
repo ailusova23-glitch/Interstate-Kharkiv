@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Харків 1917–1919: Перехрестя</title>
+
+    <!-- Підключаємо маніфест -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#881337">
+
+    <!-- Вбудована іконка для вкладки браузера -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23881337'/><text x='50' y='70' font-family='Arial' font-size='60' font-weight='bold' fill='%23fbbf24' text-anchor='middle'>Х</text></svg>">
+
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --primary: #881337;
+            --primary-hover: #9f1239;
+            --accent: #d97706;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; }
+        header p { margin: 5px 0 0 0; opacity: 0.9; font-size: 0.95rem; }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #4c0519;
+            overflow-x: auto;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        nav button:hover, nav button.active {
+            background-color: var(--primary-hover);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .stats-bar {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stat-item { font-weight: bold; }
+        .stat-item span { color: var(--accent); }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
+
+        /* Стилі для розгортальних карток */
+        details {
+            background: #f1f5f9;
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+        }
+
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        details p { margin-top: 10px; }
+
+        /* Хронологічна стрічка */
+        .timeline-item {
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        .timeline-date { font-weight: bold; color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Харків 1917–1919: Перехрестя</h1>
+        <p>Інтерактивний додаток на основі наукового дослідження МАН</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="switchTab('map', this)">🗺️ Карта й Час</button>
+        <button class="nav-btn" onclick="switchTab('topics', this)">📚 Теми-Картки</button>
+        <button class="nav-btn" onclick="switchTab('tests', this)">📝 Тести & XP</button>
+        <button class="nav-btn" onclick="switchTab('profile', this)">🏆 Профіль & Сертифікат</button>
+    </nav>
+
+    <div class="container">
+        <!-- Панель статусу користувача -->
+        <div class="stats-bar">
+            <div class="stat-item">👤 <span id="userName">Гість</span></div>
+            <div class="stat-item">⭐ Досвід: <span id="userXP">0</span> XP</div>
+            <div class="stat-item">🎖️ Рівень: <span id="userLevel">Спостерігач</span></div>
+        </div>
+
+        <!-- ВКЛАДКА 1: КАРТА І ХРОНОЛОГІЯ -->
+        <div id="map" class="tab-content active">
+            <div class="card">
+                <h2>Інтерактивна карта та зміни влади</h2>
+                <p>У 1917–1919 роках влада в Харкові змінювалася щонайменше <b>6 разів</b>[cite: 1].</p>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">Березень 1917 – Грудень 1917</div>
+                    <div><b>Українська Центральна Рада / Двовладдя</b>[cite: 1] — перші маніфестації, формування Губернської ради[cite: 1].</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Грудень 1917 – Квітень 1918</div>
+                    <div><b>Перший більшовицький режим</b>[cite: 1] — проголошення радянської УНР та ДКРР[cite: 1].</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Квітень 1918 – Листопад 1918</div>
+                    <div><b>Німецька окупація та Гетьманат П. Скоропадського</b>[cite: 1].</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Грудень 1918 – Січень 1919</div>
+                    <div><b>Період «Міжвладдя»</b>[cite: 1] — одночасне існування кількох владних центрів[cite: 1].</div>
+                </div>
+
+                <button class="btn" onclick="addXP(15, 'Досліджено хронологію змін влади!')">Ознайомитися з картою (+15 XP)</button>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 2: ТЕМИ (РОЗГОРТАЛЬНІ КАРТКИ) -->
+        <div id="topics" class="tab-content">
+            <div class="card">
+                <h2>Матеріали дослідження</h2>
+                <p>Клацніть на тему, щоб розгорнути деталі:</p>
+
+                <details>
+                    <summary>1. Стан досліджень та актуальність</summary>
+                    <p>Харківський вимір революції тривалий час залишався фрагментованим через домінування києвоцентричного наративу[cite: 1]. Новизна роботи полягає в поєднанні аналізу політики з повсякденними стратегіями мешканців[cite: 1].</p>
+                </details>
+
+                <details>
+                    <summary>2. Період «Міжвладдя» (1918–1919)</summary>
+                    <p>Особливий період, коли в Харкові паралельно існували німецька комендатура, гетьманська адміністрація, представники Директорії та більшовицький ревком[cite: 1].</p>
+                </details>
+
+                <details>
+                    <summary>3. Повсякденні стратегії виживання (Результати опитування)</summary>
+                    <p>За даними опитування 25 мешканців[cite: 1]:</p>
+                    <ul>
+                        <li><b>72%</b> вважають головною проблемою пошук їжі та тепла[cite: 1].</li>
+                        <li><b>60%</b> називають найкращою стратегією невтручання в політику[cite: 1].</li>
+                        <li><b>32%</b> зберегли родинні перекази про ті часи[cite: 1].</li>
+                    </ul>
+                </details>
+
+                <br>
+                <button class="btn" onclick="addXP(20, 'Вивчено основни теми дослідження!')">Прочитати всі картки (+20 XP)</button>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 3: ТЕСТИ ТА ГЕЙМІФІКАЦІЯ -->
+        <div id="tests" class="tab-content">
+            <div class="card">
+                <h2>Мінітест: Перевірка знань</h2>
+                <p><b>Запитання 1:</b> Скільки разів у Харкові змінювалася влада протягом 1917–1919 років[cite: 1]?</p>
+                
+                <label><input type="radio" name="q1" value="w1"> 2 рази</label><br>
+                <label><input type="radio" name="q1" value="w2"> 4 рази</label><br>
+                <label><input type="radio" name="q1" value="correct"> Щонайменше 6 разів</label><br><br>
+
+                <button class="btn" onclick="checkTest()">Скласти тест</button>
+                <p id="testStatus" style="font-weight: bold; margin-top: 15px;"></p>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА 4: ПРОФІЛЬ ТА СЕРТИФІКАТ -->
+        <div id="profile" class="tab-content">
+            <div class="card">
+                <h2>Управління акаунтом</h2>
+                <div id="authBlock">
+                    <p>Увійдіть, щоб зберігати прогрес та отримати іменний сертифікат.</p>
+                    <button class="btn" onclick="login()">Увійти через Google</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Іменний Сертифікат</h2>
+                <p id="certInfo">Пройдіть тест у вкладці «Тести», щоб розблокувати сертифікат[cite: 1].</p>
+                <button class="btn" id="certBtn" disabled onclick="downloadCert()">Завантажити сертифікат (PDF)</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let xp = 0;
+        let isLoggedIn = false;
+        let testPassed = false;
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function addXP(amount, message) {
+            xp += amount;
+            document.getElementById('userXP').innerText = xp;
+            
+            // Оновлення рівня
+            if(xp >= 50) document.getElementById('userLevel').innerText = "Дослідник";
+            if(xp >= 100) document.getElementById('userLevel').innerText = "Краєзнавець-Знавець";
+
+            alert(`🎉 ${message}\n+${amount} XP отримано!`);
+        }
+
+        function checkTest() {
+            const selected = document.querySelector('input[name="q1"]:checked');
+            const status = document.getElementById('testStatus');
+
+            if (!selected) {
+                alert("Будь ласка, оберіть варіант відповіді!");
+                return;
+            }
+
+            if (selected.value === 'correct') {
+                status.innerText = "✅ Правильно! Влада змінювалася 6 разів. Вам нараховано +40 XP![cite: 1]";
+                status.style.color = "green";
+                if (!testPassed) {
+                    addXP(40, "Успішно складено мінітест!");
+                    testPassed = true;
+                    unlockCertificate();
+                }
+            } else {
+                status.innerText = "❌ Неправильно. Згадайте матеріали: у роботі зафіксовано 6 змін влади[cite: 1]!";
+                status.style.color = "red";
+            }
+        }
+
+        function login() {
+            isLoggedIn = true;
+            document.getElementById('userName').innerText = "Анна Ілюшова";
+            document.getElementById('authBlock').innerHTML = `
+                <p>✅ Ви увійшли як <b>Анна Ілюшова</b></p>
+                <button class="btn" style="background-color: #475569;" onclick="logout()">Вийти з акаунта</button>
+            `;
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            document.getElementById('userName').innerText = "Гість";
+            document.getElementById('authBlock').innerHTML = `
+                <p>Увійдіть, щоб зберігати прогрес та отримати іменний сертифікат.</p>
+                <button class="btn" onclick="login()">Увійти через Google</button>
+            `;
+        }
+
+        function unlockCertificate() {
+            const btn = document.getElementById('certBtn');
+            btn.removeAttribute('disabled');
+            document.getElementById('certInfo').innerText = "🎉 Вітаємо! Ви пройшли курс та можете отримати підтверджувальний сертифікат.";
+        }
+
+        function downloadCert() {
+            const name = isLoggedIn ? "Анна Ілюшова" : "Учень / Дослідник";
+            alert(`📜 Сформовано Сертифікат!\n\nЦим підтверджується, що ${name} успішно опанував(ла) курс «Харків 1917–1919: Перехрестя» за науковим дослідженням МАН!`);
+        }
+    </script>
+</body>
+</html>
